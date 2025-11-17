@@ -24,3 +24,43 @@ with st.form('summarize_form', clear_on_submit=True):
         with st.spinner('구조도를 생성하는 중 입니다...'):
             result = auto_knowledge_graph(user_text)
             res = result
+
+if res:
+    nodes = []
+    edges = []
+    duplication = []
+    for item in result:
+        if item[0] in duplication:
+            pass
+        else:
+            duplication.append(item[0])
+            nodes.append(Node(id=item[0], label=item[0], size=10))
+        
+        if item[1] in duplication:
+            pass
+        else:
+            duplication.append(item[1])
+            nodes.append(Node(id=item[1], label=item[1], size=10))
+
+        if item[2] in duplication:
+            pass
+        else:
+            duplication.append(item[2])
+            nodes.append(Node(id=item[2], label=item[2], size=10))
+
+        edges.append(Edge(source=item[0], target=item[1], type="CURVE_SMOOTH"))
+        edges.append(Edge(source=item[1], target=item[2], type="CURVE_SMOOTH"))
+
+    config = Config(
+        width=750,
+        height=950,
+        directed=True,
+        physics=True,
+        hierarchical=False,
+        nodeHighlightBehavior=True,
+        highlightColor='#7A7A6',
+        collapsible=True,
+        node={'labelProperty': 'label'},
+    )
+
+    return_value = agraph(nodes=nodes, edges=edges, config=config)
